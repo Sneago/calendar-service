@@ -1,8 +1,11 @@
 [flake8]
 format = wemake
 show-source = true
-max-line-length = 95
-exclude = .git,__pycache__,.venv,*/migrations/*
+extend-exclude = .venv,*/migrations/*
+
+# only run `wemake-python-styleguide` with `flake8`:
+select = WPS, E999
+
 per-file-ignores =
   config/settings.py: WPS226, WPS407
   manage.py: WPS433
