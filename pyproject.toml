@@ -1,0 +1,28 @@
+[project]
+name = "calendar-service"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Julia Snezhko",email = "julia.sneg2@gmail.com"}
+]
+requires-python = ">=3.14,<4.0"
+dependencies = [
+    "django (>=6.1.2,<7.0.0)",
+    "drf-spectacular (>=0.30.0,<0.31.0)",
+    "djangorestframework (>=3.18.3,<4.0.0)",
+    "psycopg[binary] (>=3.3.6,<4.0.0)",
+    "python-dotenv (>=1.2.4,<2.0.0)",
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "wemake-python-styleguide (>=1.8.1,<2.0.0)",
+]
+
+[tool.poetry]
+package-mode = false
