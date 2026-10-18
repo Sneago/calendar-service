@@ -36,7 +36,7 @@ target-version = "py314"
 line-length = 95
 extend-exclude = ["*/migrations/*"]
 preview = true
-fix = true
+fix = false
 output-prefer-rule-codes = true
 
 
@@ -89,9 +89,7 @@ select = [
 ]
 ignore = [
   "COM812",
-  "D100",
-  "D104",
-  "D106",    # nested `class Meta` needs no docstring
+  "D1",      # docstrings are optional: only where the code is not obvious
   "D203",
   "D212",
   "D401",
@@ -102,6 +100,8 @@ ignore = [
   "PLR09",   # WPS has its own complexity rules
   "PLR2004", # WPS reports magic numbers
   "PLR6301", # do not require classmethod / staticmethod when self not used
+  "RUF002",  # comments and docstrings are in Russian
+  "RUF003",
   "RUF012",  # Django `Meta`/DRF class attrs are mutable by design
   "RUF067",  # WPS handles `__init__.py` logic better
   "RUF105",  # keep old `# noqa` comments style, not `# ruff` comments
