@@ -1,13 +1,14 @@
-from django.urls import path, register_converter
+from django.urls import path
 
 from events.api import views
-from events.api.converters import DateConverter
-
-register_converter(DateConverter, "date")
 
 app_name = "events"
 
 urlpatterns = [
     path("add/", views.EventCreateView.as_view(), name="add"),
-    path("events/<date:day>/", views.EventListView.as_view(), name="events"),
+    path(
+        "events/<int:year>/<int:month>/<int:day>/",
+        views.EventListView.as_view(),
+        name="events",
+    ),
 ]
