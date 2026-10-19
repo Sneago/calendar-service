@@ -10,7 +10,7 @@ class OccurrenceNotFound(Exception):  # noqa: N818
 
 
 def _lock_occurrence(event_id: int, day: dt.date) -> Event:
-    """Блокирует серию и проверяет вхождение"""
+    """Блокирует серию и проверяет вхождение."""
     try:
         event = Event.objects.select_for_update().get(pk=event_id)
     except Event.DoesNotExist:
@@ -31,3 +31,13 @@ def cancel_occurrence(event_id: int, day: dt.date) -> None:
             date=day,
             defaults={"is_cancelled": True},
         )
+
+
+@transaction.atomic
+def rename_occurrence(event_id: int, day: dt.date, name: str) -> None:
+    event = _lock_occurrence(event_id, day)
+    OccurrenceOverride.objects.update_or_create(
+        event=event,
+        date=day,
+        defaults={"name": name},
+    )

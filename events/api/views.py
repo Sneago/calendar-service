@@ -6,7 +6,11 @@ from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 
 from events import services
-from events.api.serializers import EventCreateSerializer, OccurrenceSerializer
+from events.api.serializers import (
+    EventCreateSerializer,
+    OccurrenceSerializer,
+    RenameSerializer,
+)
 from events.models import Event
 
 
@@ -41,3 +45,15 @@ class OccurrenceCancelView(DayFromUrlMixin, views.APIView):
     def post(self, request, pk, **kwargs):
         services.cancel_occurrence(pk, self.get_day())
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class OccurrenceRenameView(DayFromUrlMixin, generics.GenericAPIView):
+    serializer_class = RenameSerializer
+
+    def post(self, request, pk, **kwargs):
+        day = self.get_day()
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        name = serializer.validated_data["name"]
+        services.rename_occurrence(pk, day, name)
+        return Response({"id": pk, "name": name})
