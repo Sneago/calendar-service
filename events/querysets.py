@@ -8,12 +8,15 @@ SECONDS_PER_DAY = 86400
 EPOCH = dt.date(1970, 1, 1)  # noqa: WPS432
 
 
+def day_number(day: dt.date) -> int:
+    return (day - EPOCH).days
+
+
 class EventQuerySet(models.QuerySet):
     def occurring_on(self, day: dt.date) -> Self:
-        day_number = (day - EPOCH).days
-        day_start = day_number * SECONDS_PER_DAY
+        day_start = day_number(day) * SECONDS_PER_DAY
         day_end = day_start + SECONDS_PER_DAY
-        days_since_start = day_number - models.F("start_at") / SECONDS_PER_DAY
+        days_since_start = day_number(day) - models.F("start_at") / SECONDS_PER_DAY
         override = models.FilteredRelation(
             "overrides",
             condition=models.Q(overrides__date=day),
@@ -30,7 +33,10 @@ class EventQuerySet(models.QuerySet):
             .filter(
                 # period__isnull в обеих ветках: так Postgres выбирает частичные индексы
                 models.Q(period__isnull=True, start_at__gte=day_start, start_at__lt=day_end)
-                | models.Q(period__isnull=False, start_at__lt=day_end, days_into_period=0),
+                | (
+                    models.Q(period__isnull=False, start_at__lt=day_end, days_into_period=0)
+                    & (models.Q(until__isnull=True) | models.Q(until__gt=day))
+                ),
                 models.Q(override__isnull=True) | models.Q(override__is_cancelled=False),
             )
         )

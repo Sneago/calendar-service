@@ -22,6 +22,7 @@ class Event(models.Model):
         blank=True,
         validators=[MinValueValidator(1)],
     )
+    # день until в серию не входит
     until = models.DateField(
         null=True,
         blank=True,

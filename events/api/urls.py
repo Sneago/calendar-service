@@ -12,6 +12,11 @@ urlpatterns = [
         name="remove",
     ),
     path(
+        "remove-next/<int:pk>/<int:year>/<int:month>/<int:day>/",
+        views.SeriesTruncateView.as_view(),
+        name="remove-next",
+    ),
+    path(
         "update/<int:pk>/<int:year>/<int:month>/<int:day>/",
         views.OccurrenceRenameView.as_view(),
         name="update",

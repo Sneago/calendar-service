@@ -47,6 +47,13 @@ class OccurrenceCancelView(DayFromUrlMixin, views.APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class SeriesTruncateView(DayFromUrlMixin, views.APIView):
+    @extend_schema(request=None, responses={204: None})
+    def post(self, request, pk, **kwargs):
+        services.cancel_occurrences_from(pk, self.get_day())
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class OccurrenceRenameView(DayFromUrlMixin, generics.GenericAPIView):
     serializer_class = RenameSerializer
 
