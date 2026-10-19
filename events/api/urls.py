@@ -7,6 +7,11 @@ app_name = "events"
 urlpatterns = [
     path("add/", views.EventCreateView.as_view(), name="add"),
     path(
+        "remove/<int:pk>/<int:year>/<int:month>/<int:day>/",
+        views.OccurrenceCancelView.as_view(),
+        name="remove",
+    ),
+    path(
         "events/<int:year>/<int:month>/<int:day>/",
         views.EventListView.as_view(),
         name="events",

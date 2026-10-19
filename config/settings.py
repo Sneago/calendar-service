@@ -132,6 +132,7 @@ MAILERS = {
 # https://www.django-rest-framework.org/api-guide/settings/
 
 REST_FRAMEWORK = {
+    "EXCEPTION_HANDLER": "events.api.views.exception_handler",
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": [],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],

@@ -13,10 +13,18 @@ class EventQuerySet(models.QuerySet):
         day_start = day_number * SECONDS_PER_DAY
         day_end = day_start + SECONDS_PER_DAY
         days_since_start = day_number - models.F("start_at") / SECONDS_PER_DAY
-        # period__isnull в обеих ветках: так Postgres выбирает частичные индексы
-        return self.alias(days_into_period=days_since_start % models.F("period")).filter(
+        override = models.FilteredRelation(
+            "overrides",
+            condition=models.Q(overrides__date=day),
+        )
+        return self.alias(
+            days_into_period=days_since_start % models.F("period"),
+            override=override,
+        ).filter(
+            # period__isnull в обеих ветках: так Postgres выбирает частичные индексы
             models.Q(period__isnull=True, start_at__gte=day_start, start_at__lt=day_end)
             | models.Q(period__isnull=False, start_at__lt=day_end, days_into_period=0),
+            models.Q(override__isnull=True) | models.Q(override__is_cancelled=False),
         )
 
     def by_time_of_day(self) -> Self:
