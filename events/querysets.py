@@ -26,6 +26,7 @@ class EventQuerySet(models.QuerySet):
             .alias(
                 days_into_period=days_since_start % models.F("period"),
                 override=override,
+                is_cancelled=Coalesce("override__is_cancelled", models.Value(value=False)),
             )
             .annotate(
                 occurrence_name=Coalesce("override__name", "name"),
@@ -37,7 +38,7 @@ class EventQuerySet(models.QuerySet):
                     models.Q(period__isnull=False, start_at__lt=day_end, days_into_period=0)
                     & (models.Q(until__isnull=True) | models.Q(until__gt=day))
                 ),
-                models.Q(override__isnull=True) | models.Q(override__is_cancelled=False),
+                is_cancelled=False,
             )
         )
 
